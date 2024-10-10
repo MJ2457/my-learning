@@ -1,33 +1,42 @@
-import React from 'react';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth';
-import { auth } from '../firebase';
+import React, { useState } from 'react';
+import { auth, googleProvider } from '../firebase';
+import { signInWithPopup, signOut } from 'firebase/auth';
 
-const Auth = () => {
-  const [user] = useAuthState(auth);
+function Auth() {
+  const [user, setUser] = useState(null);
 
-  const signInWithGoogle = () => {
-    const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider);
+  const signInWithGoogle = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      setUser(result.user);
+    } catch (error) {
+      console.error("Error signing in with Google", error);
+    }
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      setUser(null);
+    } catch (error) {
+      console.error("Error signing out", error);
+    }
   };
 
   return (
     <div className="auth-container">
       {user ? (
-        <div className="user-info">
-          <img src={user.photoURL} alt="User" className="user-avatar" />
-          <span>{user.displayName}</span>
-          <button onClick={() => signOut(auth)} className="sign-out-button">
-            Sign Out
-          </button>
+        <div>
+          <p>Welcome, {user.displayName}!</p>
+          <button onClick={handleSignOut} className="bg-red-500 text-white px-4 py-2 rounded">Sign Out</button>
         </div>
       ) : (
-        <button onClick={signInWithGoogle} className="sign-in-button">
+        <button onClick={signInWithGoogle} className="bg-blue-500 text-white px-4 py-2 rounded">
           Sign In with Google
         </button>
       )}
     </div>
   );
-};
+}
 
 export default Auth;

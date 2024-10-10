@@ -1,12 +1,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ChevronRight, Search } from 'lucide-react';
-import { stages } from './data/stages';
-import { StageIcon } from './components/StageIcon';
-import StageDetails from './components/StageDetails';
-import './Styles/global.css';
-import { darkenColor } from './components/utils/darkenColor';
-
+import { stages } from '../data/stages';
+import { StageIcon } from './StageIcon';
 
 function LearningFunnel() {
   const [activeStage, setActiveStage] = useState(null);
@@ -45,17 +41,14 @@ function LearningFunnel() {
   const filteredStages = useMemo(() => {
     if (!searchQuery) return stages;
     
-    const lowerCaseQuery = searchQuery.toLowerCase();
-    
     return stages.map(stage => ({
       ...stage,
       details: stage.details.filter(detail =>
-        detail.text.toLowerCase().includes(lowerCaseQuery) ||
-        (detail.link && detail.link.toLowerCase().includes(lowerCaseQuery))
+        detail.text.toLowerCase().includes(searchQuery.toLowerCase())
       )
     })).filter(stage => 
-      stage.name.toLowerCase().includes(lowerCaseQuery) ||
-      stage.description.toLowerCase().includes(lowerCaseQuery) ||
+      stage.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      stage.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
       stage.details.length > 0
     );
   }, [searchQuery]);
@@ -64,11 +57,6 @@ function LearningFunnel() {
     const completedCount = completedTasks[stageName]?.length || 0;
     const totalTasks = stages.find(s => s.name === stageName).details.length;
     return Math.round((completedCount / totalTasks) * 100);
-  };
-
-  const handleSearch = (e) => {
-    setSearchQuery(e.target.value);
-    setActiveStage(null); // Close any open stages when searching
   };
 
   const darkenColor = (color, percent) => {
@@ -90,8 +78,8 @@ function LearningFunnel() {
           type="text"
           placeholder="Search topics or resources..."
           value={searchQuery}
-          onChange={handleSearch}
-          className="search-input"
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full p-2 pr-10 border rounded-lg"
         />
         <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
       </div>
@@ -117,11 +105,15 @@ function LearningFunnel() {
             </div>
             {activeStage === index && (
               <div className="stage-details">
-                <StageDetails 
-                  stage={stage} 
-                  completedTasks={completedTasks[stage.name] || []}
-                  onTaskToggle={toggleTask}
-                />
+                <ul>
+                  {stage.details.map((detail, detailIndex) => (
+                    <li key={detailIndex}>
+                      <Link to={detail.link} className="text-blue-600 hover:underline">
+                        {detail.text}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
           </div>
@@ -134,14 +126,4 @@ function LearningFunnel() {
   );
 }
 
-function App() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<LearningFunnel />} />
-      </Routes>
-    </Router>
-  );
-}
-
-export default App;
+export default LearningFunnel;
