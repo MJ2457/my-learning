@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
 import { ChevronRight, Search } from 'lucide-react';
 import { stages } from './data/stages';
 import { StageIcon } from './components/StageIcon';
@@ -31,7 +32,7 @@ const StageDetails = ({ stage, completedTasks = [], onTaskToggle }) => (
   </div>
 );
 
-function App() {
+function LearningFunnel() {
   const [activeStage, setActiveStage] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [completedTasks, setCompletedTasks] = useState({});
@@ -157,4 +158,4 @@ function App() {
   );
 }
 
-export default App;
+export default LearningFunnel;
