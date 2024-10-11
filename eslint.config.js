@@ -22,6 +22,7 @@ export default [
       react,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
+      'import': true,
     },
     rules: {
       ...js.configs.recommended.rules,
@@ -34,6 +35,11 @@ export default [
         { allowConstantExport: true },
         { noUnusedVars: true },
       ],
+      'import/no-unresolved': 'error',
+      'import/named': 'error',
+      'import/default': 'error',
+      'import/namespace': 'error',
+      'import/no-absolute-path': 'error',
     },
   },
 ]

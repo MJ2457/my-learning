@@ -6,6 +6,7 @@ import { StageIcon } from './components/StageIcon';
 import StageDetails from './components/StageDetails';
 import './Styles/global.css';
 import { darkenColor } from './utils/darkenColor';
+import Footer from './components/Footer';
 
 
 function LearningFunnel() {
@@ -137,9 +138,14 @@ function LearningFunnel() {
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<LearningFunnel />} />
-      </Routes>
+      <div className="flex flex-col min-h-screen">
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<LearningFunnel />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
     </Router>
   );
 }
