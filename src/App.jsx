@@ -5,7 +5,7 @@ import { stages } from './data/stages';
 import { StageIcon } from './components/StageIcon';
 import StageDetails from './components/StageDetails';
 import './Styles/global.css';
-import { darkenColor } from './components/utils/darkenColor';
+import { darkenColor } from './utils/darkenColor';
 
 
 function LearningFunnel() {
